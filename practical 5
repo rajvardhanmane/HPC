@@ -1,0 +1,84 @@
+#include<stdio.h>
+#include<omp.h>
+#define N 500
+
+int main(){
+int A[N][N], B[N][N], C[N][N] = {0};
+double start_time = omp_get_wtime();  
+#pragma omp parallel for schedule(static)  
+for (int i = 0; i < N; i++)  
+    for (int j = 0; j < N; j++)  
+        for (int k = 0; k < N; k++)  
+            C[i][j] += A[i][k] * B[k][j];  
+double end_time = omp_get_wtime();  
+printf("Static Scheduling Execution Time: %f seconds\n", end_time - start_time);  
+
+start_time = omp_get_wtime();
+#pragma omp parallel for schedule(dynamic)
+for (int i = 0; i < N; i++)
+    for (int j = 0; j < N; j++)
+        for (int k = 0; k < N; k++)
+            C[i][j] += A[i][k] * B[k][j];
+end_time = omp_get_wtime();
+printf("Dynamic Scheduling Execution Time: %f seconds\n", end_time - start_time);
+
+return 0;
+}
+=========================================================================
+#include<stdio.h>
+#include<omp.h>
+
+int main(){
+
+	#pragma omp parallel
+    {
+        int thread_id = omp_get_thread_num();
+        char *names[] = {"Harshal", "Pratik", "Prateek", "Sagar","Aman","Rajwardhan","Rajat","Sahil"};
+        printf("Thread %d: %s\n", thread_id, names[thread_id % 4]);
+    }
+
+return 0;
+}
+=========================================================================================
+=========================================================================================
+#include <stdio.h>
+#include <omp.h>
+
+int main() {
+    int total_sum = 0;
+
+    #pragma omp parallel
+    {
+        int partial_sum = 0;  // Each thread gets a private copy
+
+        #pragma omp for
+        for (int i = 1; i <= 20; i++) {
+            partial_sum += i;  // Each thread computes a portion of the sum
+        }
+
+        #pragma omp atomic
+        total_sum += partial_sum;  // Ensure correct accumulation
+    }
+
+    printf("Total Sum: %d\n", total_sum);  // Expected Output: 210
+    return 0;
+}
+==================================================================
+===================================================================================
+
+
+#include<stdio.h>
+#include<omp.h>
+int main(){
+
+    int sum = 0;
+    #pragma omp parallel reduction(+:sum)
+    {
+        int thread_id = omp_get_thread_num();
+        int square = thread_id * thread_id;
+        printf("Thread %d: Square = %d\n", thread_id, square);
+        sum += square;
+    }
+    printf("Total Sum of Squares: %d\n", sum);
+return 0;
+}
