@@ -1,4 +1,6 @@
-#include <stdio.h>
+#00oi963 i1
+
+]nclude <stdio.h>
 #include <omp.h>
 
 #define N 40  // Change for testing
